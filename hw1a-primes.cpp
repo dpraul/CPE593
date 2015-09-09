@@ -1,28 +1,35 @@
 #include<iostream>
+#include<math.h>
 #include<stdlib.h>  // for strtol
 
 using namespace std;
 
-const int TABLE_LEN = 1000000;
+const long long TABLE_LEN = 100000000000000;
 
 int main(int argc, char *argv[]) {
-	if (argc != 3) {
-		cout << "usage: " << argv[0] << " <a> <b>" << endl;
-		cout << "where a < b <= 10^14 and b - a < 10^9";
+	unsigned long long min, max;
+	/*
+	if (argc == 3) {
+		min = strtol(argv[1], NULL, 10);  // a
+		max = strtol(argv[2], NULL, 10);  // b
+	}
+	else {
+		cout << "Enter a (a < 10^14): ";
+		cin >> min;
+		cout << "Enter b (a < b < 10^14): ";
+		cin >> max;
+	}
+	*/
+	min = 2000000000000;
+	max = 2000000100000;
+	if (min > max) {
+		cout << "b must be larger than a" << endl;
 		return 0;
 	}
 
-	int min = strtol(argv[1], NULL, 10);  // a
-	int max = strtol(argv[2], NULL, 10);  // b
-	if (min >= max) {
-		cout << "usage: " << argv[0] << " <a> <b>" << endl;
-		cout << "where a < b <= 10^14 and b - a < 10^9";
-		return 0;
-	}
+	bool* not_prime = new bool[TABLE_LEN];
 
-	bool not_prime[TABLE_LEN] = { false };
-
-	long i, j;
+	unsigned long long i, j;
 
 	for (i = 2; i <= max; i ++) {
 		if (!not_prime[i - 1]) {
@@ -32,7 +39,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	long count = 0;
+	unsigned long long count = 0;
 	for (i = min; i <= max; i += 2) {
 		if (!not_prime[i - 1]) {
 			count++;

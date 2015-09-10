@@ -13,3 +13,5 @@ bld/
 
 
 *.exe
+*.suo
+*.sdf

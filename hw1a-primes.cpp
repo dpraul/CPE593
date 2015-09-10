@@ -5,12 +5,6 @@
 
 using namespace std;
 
-int f(int a, int b, int c) {
-	if (a <= 0)
-		return a + b * c;
-	return f(a - 1, b + 1, c + 2);
-}
-
 int main(int argc, char *argv[]) {
 	unsigned long long min, max;
 	

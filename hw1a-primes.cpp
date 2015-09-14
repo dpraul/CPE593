@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 		max = strtol(argv[2], NULL, 10);  // b
 	}
 	else {  // Else, have user enter in.
-		cout << "requirements: a < b < 10^14" << endl;
+		cout << "requirements: a < b < 10^14, b - a < 10^9" << endl;
 		cout << "Enter a (min): ";
 		cin >> min;
 		cout << "Enter b (max): ";
@@ -26,36 +26,38 @@ int main(int argc, char *argv[]) {
 		cout << "b must be larger than a" << endl;
 		return 0;
 	}
+	
+	if (min % 2 == 0) {  // if min is even, make it an odd number.
+		min += 1;
+	}
 
-	vector<bool> composite(max + 1, false);
-	unsigned long long i, j;
-	// Manually set 0 and 1 to composite
-	composite[0] = true;
-	composite[1] = true;
+	bool* composite = new bool[(int)sqrt(max) + 1];
+	bool* composite_in_range = new bool[max - min + 1];
+	unsigned long long sqrt_max = (int)sqrt(max);
+	double log_min = log(min * 1.0);
+	unsigned long long i, j, next_start;
 
-	// Set all even numbers to composite
-	//!! In testing, this turned out to be slower than checking whether
-	//!! the number was even during each loop, so it was commented out
-	//for (i = 4; i <= max; i += 2) {
-	//	composite[i] = true;
-	//}
 	// Use Erotosthenes sieve to mark remaining numbers.
-	for (i = 3; i <= (int)sqrt(max); i += 2) {
-		if (!composite[i] && i % 2 != 0) {
-			for (j = i * i; j <= max; j += (i * 2)) {
+	for (i = 3; i <= sqrt_max; i += 2) {
+		if (!composite[i]) {
+			for (j = i * i; j <= sqrt_max; j += (i * 2)) {
 				composite[j] = true;
+			}
+			next_start = pow(i, (int)(log_min / log(i * 1.0)));
+			if (next_start <  i * i) {
+				next_start = i * i;
+			}
+			for (j = next_start; j <= max; j += (i * 2)) {
+				if (j >= min) {
+					composite_in_range[j - min] = true;
+				}
 			}
 		}
 	}
-
-	// Count primes from min to max
+	// count primes recorded in sieve
 	unsigned long long count = 0;
-	// 2 is the only prime even though it's even, so include if needed
-	if (min <= 2) {
-		count++;
-	}
-	for (i = min; i <= max; i++) {
-		if (!composite[i] && i % 2 != 0) {
+	for (i = 0; i < max - min + 1; i += 2) {
+		if (!composite_in_range[i]) {
 			count++;
 		}
 	}

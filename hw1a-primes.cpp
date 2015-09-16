@@ -27,38 +27,66 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 	
-	if (min % 2 == 0) {  // if min is even, make it an odd number.
+	// Guarantee that min is an odd number.
+	if (min % 2 == 0) {
 		min += 1;
 	}
 
-	bool* composite = new bool[(int)sqrt(max) + 1];
-	bool* composite_in_range = new bool[max - min + 1];
-	unsigned long long sqrt_max = (int)sqrt(max);
-	double log_min = log(min * 1.0);
-	unsigned long long i, j, next_start;
 
-	// Use Erotosthenes sieve to mark remaining numbers.
-	for (i = 3; i <= sqrt_max; i += 2) {
-		if (!composite[i]) {
-			for (j = i * i; j <= sqrt_max; j += (i * 2)) {
-				composite[j] = true;
+	unsigned long long sqrt_max = (int)sqrt(max);
+	unsigned long long i, j, count = 0;
+
+	// In this case, it is more optimized to do the whole sieve
+	if (min <= sqrt_max) {
+		bool* composite = new bool[max + 1];
+
+		composite[0] = true;  // 0 is not prime.
+		composite[1] = true;  // 1 is not prime.
+		composite[2] = false; // 2 is prime.
+		for (i = 3; i <= sqrt_max; i += 2) {
+			if (!composite[i]) {
+				// Create the whole sieve from 3 to max
+				for (j = i * i; j <= max; j += (i * 2)) {
+					composite[j] = true;
+				}
 			}
-			next_start = pow(i, (int)(log_min / log(i * 1.0)));
-			if (next_start <  i * i) {
-				next_start = i * i;
+		}
+
+		// Count primes only above min, a.k.a. in composite_in_range
+		for (i = min; i <= max; i += 2) {
+			if (!composite[i]) {
+				++count;
 			}
-			for (j = next_start; j <= max; j += (i * 2)) {
-				if (j >= min) {
+		}
+
+		if (min <= 2) {  // 2 is the only even number that is prime... add it in!
+			++count;
+		}
+	}
+
+	// Otherwise, we can skip all the numbers between sqrt_max and min
+	else {
+		bool* composite = new bool[(int)sqrt(max) + 1];
+		bool* composite_in_range = new bool[max - min + 1];
+
+		for (i = 3; i <= sqrt_max; i += 2) {
+			if (!composite[i]) {
+				// Create a base sieve from 3 to sqrt_max
+				for (j = i * i; j <= sqrt_max; j += (i * 2)) {
+					composite[j] = true;
+				}
+				// ... and also create a sieve from min to max.
+				for (j = ((unsigned long long)(min / i) * i) + i; j <= max; j += i) {
 					composite_in_range[j - min] = true;
 				}
 			}
 		}
-	}
-	// count primes recorded in sieve
-	unsigned long long count = 0;
-	for (i = 0; i < max - min + 1; i += 2) {
-		if (!composite_in_range[i]) {
-			count++;
+
+		// Count primes only above min, a.k.a. in composite_in_range
+		for (i = 0; i < max - min + 1; i += 2) {
+			if (!composite_in_range[i]) {
+				++count;
+			}
 		}
 	}
 	cout << "Primes: " << count;

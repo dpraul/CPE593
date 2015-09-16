@@ -1,7 +1,6 @@
 #include<iostream>
 #include<math.h>  // for sqrt
 #include<stdlib.h>  // for strtol
-#include<vector>
 
 using namespace std;
 

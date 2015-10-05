@@ -47,15 +47,15 @@ int main(int argc, char *argv[]) {
 	string temp; // Put in stuff we don't need
 	if (file.is_open()) {
 		file >> temp; // the string "Cases:"
-		file >> cases;  // Number of cases. We won't use this since we can dete.
+		file >> cases;  // number of cases
 		k = 0;
 		while (!file.eof() && k < cases) {  // Go through each case.
-			file >> length; // First line, number of elements
+			file >> length; // First line: number of elements
 			x = new int[length];
-			for (i = 0; i < length; i++) { // Second line is list of elements
+			for (i = 0; i < length; i++) { // Second line: list of elements
 				file >> x[i];
 			}
-			file >> target; // Third line is number to search.
+			file >> target; // Third line: number to search.
 			binarySearch(x, target, length);
 			++ k;
 		}

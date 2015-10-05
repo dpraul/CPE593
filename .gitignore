@@ -15,3 +15,4 @@ bld/
 *.exe
 *.suo
 *.sdf
+*.exe.stackdump

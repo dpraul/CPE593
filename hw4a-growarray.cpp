@@ -98,8 +98,17 @@ public:
 
 int main() {
 	GrowArray a;
-	for (int j = 1; j <= 17; j++) {
+	for (int j = 1; j <= 10; j++) {
 		a.addFront(j);
+		a.addBack(10 - j);
 		cout << a << endl;
 	}
+	a.removeBack();
+	a.removeBack();a.removeBack();
+	a.removeBack();
+	
+	a.removeFront();
+	a.removeFront();
+	a.removeFront();
+	cout << a;
 }

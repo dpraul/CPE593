@@ -1,4 +1,6 @@
 #include<iostream>
+#include<fstream>
+#include<sstream>
 
 using namespace std;
 
@@ -96,19 +98,59 @@ public:
 	}
 };
 
-int main() {
-	GrowArray a;
-	for (int j = 1; j <= 10; j++) {
-		a.addFront(j);
-		a.addBack(10 - j);
-		cout << a << endl;
+int main(int argc, char *argv[]) {
+	string filename;
+	if (argc == 2) {  // Get filename from args, if available.
+		filename = argv[1];
 	}
-	a.removeBack();
-	a.removeBack();a.removeBack();
-	a.removeBack();
+	else {  // Otherwise, prompt for filename.
+		cout << "Enter filename: ";
+		cin >> filename;
+	}
 	
-	a.removeFront();
-	a.removeFront();
-	a.removeFront();
-	cout << a;
+	GrowArray a;
+	
+	string line, choice;
+	int input, i;
+	istringstream linestream;
+	
+	ifstream file;
+	file.open(filename);
+	
+	if (file.is_open()) {
+		while (!file.eof()) {
+			getline(input, line);
+			linestream(line);
+			linestream >> choice;
+			if (choice == "ADD_FRONT") {
+				while (linestream >> input) {
+					a.addFront(input);
+				}
+			}
+			else if (choice ==  "ADD_BACK") {
+				while (linestream >> input) {
+					a.addBack(input);
+				}
+			}
+			else if (choice == "REMOVE_FRONT") {
+				linestream >> input;
+				for (i = 0; i < input; i++) {
+					a.removeFront();
+				}
+			}
+			else if (choice == "REMOVE_BACK") {
+				linestream >> input;
+				for (i = 0; i < input; i++) {
+					a.removeBack();
+				}
+			}
+			else if (choice == "OUTPUT") {
+				cout << a << endl;
+			}
+			else {
+				cout << "BAD INPUT";
+				break;
+			}
+		}
+	}
 }

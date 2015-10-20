@@ -1,6 +1,6 @@
-#include<iostream>
 #include<fstream>
 #include<sstream>
+#include<iostream>
 
 using namespace std;
 
@@ -110,37 +110,35 @@ int main(int argc, char *argv[]) {
 	
 	GrowArray a;
 	
-	string line, choice;
+	string line_temp, choice;
 	int input, i;
-	istringstream linestream;
 	
 	ifstream file;
 	file.open(filename);
 	
-	if (file.is_open()) {
-		while (!file.eof()) {
-			getline(input, line);
-			linestream(line);
-			linestream >> choice;
+	if (file.good()) {
+		while (getline(file, line_temp)) {
+			istringstream line(line_temp);
+			line >> choice;
 			if (choice == "ADD_FRONT") {
-				while (linestream >> input) {
+				while (line >> input) {
 					a.addFront(input);
 				}
 			}
 			else if (choice ==  "ADD_BACK") {
-				while (linestream >> input) {
+				while (line >> input) {
 					a.addBack(input);
 				}
 			}
 			else if (choice == "REMOVE_FRONT") {
-				linestream >> input;
-				for (i = 0; i < input; i++) {
+				line >> input;
+				for (i = 0; i < input; ++i) {
 					a.removeFront();
 				}
 			}
 			else if (choice == "REMOVE_BACK") {
-				linestream >> input;
-				for (i = 0; i < input; i++) {
+				line >> input;
+				for (i = 0; i < input; ++i) {
 					a.removeBack();
 				}
 			}

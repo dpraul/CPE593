@@ -14,7 +14,7 @@ private:
 		 **/
 		size = size * 2;
 		
-		int* temp = p;
+		int * temp = p;
 		p = new int[size];
 		
 		for (int i = 0; i < used; ++i) {  // O(n)
@@ -27,10 +27,15 @@ private:
 		grow(0);
 	}
 public:
-	
+	GrowArray(int initialSize) {
+		used = 0;
+		size = initialSize;
+		p = new int[size];
+		
+	}
 	GrowArray() {
-		int len = 0,
-			size = 1;
+		used = 0;
+		size = 1;
 		p = new int[size];
 	}
 	
@@ -44,6 +49,7 @@ public:
 		}
 		p[used] = v;
 		++used;
+		//cout << ", " << used << ", " << size << ", ";
 	}
 	
 	void addFront(int v) {
@@ -51,29 +57,26 @@ public:
 			grow(1);  // shift by 1 and double size
 		}
 		else {  // shift by 1
-			int* temp = p;
-			p = new int[size];
-			
-			for (int i = 0; i < used; ++i) {  // O(n)
-				p[i + 1] = temp[i];
+			for (int i = used - 1; i >= 0; --i) {  // O(n)
+				p[i + 1] = p[i];
 			}
-			delete [] temp;
 		}
 		
-		p[used] = v;
+		p[0] = v;
 		++used;
+		//cout << used << ", " << size << ": ";
 	}
 	
-	void removeFront() {		
+	void removeFront() {
 		for (int i = 0; i < used - 1; ++i) {  // O(n)
-			p[i] = temp[i + 1];
+			p[i] = p[i + 1];
 		}
 		
 		--used;
 	}
 	
 	void removeBack() {
-		p[used] = 0;
+		p[used - 1] = 0;
 		--used;
 	}
 	
@@ -87,8 +90,16 @@ public:
 
 	friend ostream& operator << (ostream& s, const GrowArray& list) {
 		for (int i = 0; i < list.length(); i++) {
-			s << list.p[i] << ' ';
+			s << list.p[i] << " ";
 		}
 		return s;
+	}
+};
+
+int main() {
+	GrowArray a;
+	for (int j = 1; j <= 17; j++) {
+		a.addFront(j);
+		cout << a << endl;
 	}
 }

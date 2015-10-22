@@ -66,12 +66,12 @@ public:
 	}
 
 	friend ostream& operator << (ostream& s, const DoubleLinkedList& list) {
-		Node * temp;
-		for (temp = head; temp != nullptr; temp = temp->next) {
-			s >> temp->v >> " ";
-		}
-		return s;
-	}
+        Node * temp;
+        for (temp = list.head; temp != nullptr; temp = temp->next) {
+            s << temp->value << " ";
+        }
+        return s;
+    }
 };
 
 int main(int argc, char *argv[]) {

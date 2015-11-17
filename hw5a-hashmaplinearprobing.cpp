@@ -8,30 +8,31 @@ private:
 	 * Internal data
 	 **/
 	int * data;
-	int size;
-	int used;
+	int * histogram;
+	unsigned int size;
+	unsigned int used;
 	
 	
 	/**
-	 * Hashing algorithm
+	 * Hashing
 	 **/
 	
-	int hash (unsigned short value) {
-		return fnv1a(value) % size;
+	unsigned int hash (unsigned short value) {
+		return (unsigned int)fnv1a(value) % (unsigned int)size;
 	}
 	
 	// FNV-1a hashing from http://create.stephan-brumme.com/fnv-hash/
 	// default values recommended by http://isthe.com/chongo/tech/comp/fnv/
-	const static long Prime = 0x01000193;  //   16777619
-	const static long Seed  = 0x811C9DC5;  // 2166136261
+	const static long PRIME = 0x01000193;  //   16777619
+	const static long SEED  = 0x811C9DC5;  // 2166136261
 	/// hash a single byte
-	long fnv1a(unsigned char oneByte, long hash = Seed)
+	long fnv1a(unsigned char oneByte, long hash = SEED)
 	{
-		return (oneByte ^ hash) * Prime;
+		return (oneByte ^ hash) * PRIME;
 	}
 	
 	/// hash a short (two bytes)
-	long fnv1a(unsigned short twoBytes, long hash = Seed)
+	long fnv1a(unsigned short twoBytes, long hash = SEED)
 	{
 		const unsigned char* ptr = (const unsigned char*) &twoBytes;
 		hash = fnv1a(*ptr++, hash);
@@ -39,7 +40,7 @@ private:
 	}
 	
 	/// hash a 32 bit integer (four bytes)
-	long fnv1a(unsigned long fourBytes, long hash = Seed)
+	long fnv1a(unsigned long fourBytes, long hash = SEED)
 	{
 		const unsigned char* ptr = (const unsigned char*) &fourBytes;
 		hash = fnv1a(*ptr++, hash);
@@ -63,6 +64,7 @@ private:
 		for (int i = 0; i < size; i++) {
 			data[i] = 0;
 		}
+		newHistogram();
 		
 		for(int i = 0; i < originalSize; ++i) {
 			if (temp[i] != 0) {
@@ -73,7 +75,8 @@ private:
 	}
 	
 	void _add_after_check(int v) {
-		int i = hash(v);
+		unsigned int i = hash(v);
+		unsigned int tries = 1;
 		while (data[i] != 0) { // probe linearly
 			// since used always < size, there is always space.
 			if (i >= size) {
@@ -82,9 +85,29 @@ private:
 			else {
 				++i;
 			}
+			++tries;
 		}
 		data[i] = v;
+		
+		if (tries >= NUM_BINS - 1) {
+			tries = NUM_BINS - 1;
+		}
+		++histogram[tries];
+				
 		used++;
+	}
+	/**
+	 * Analysis
+	 **/
+	 
+	const static unsigned int NUM_BINS = 52;
+	 
+	void newHistogram() {
+		delete [] histogram;
+		histogram = new int[NUM_BINS];
+		for (int i = 0; i < NUM_BINS; i++) {
+			histogram[i] = 0;
+		}
 	}
 
 public:
@@ -95,10 +118,12 @@ public:
 		for (int i = 0; i < size; i++) {
 			data[i] = 0;
 		}
+		newHistogram();
 	}
 	
 	~HashMapLinearProbing() {
 		delete [] data;
+		delete [] histogram;
 	}
 	
 	void add(int v) {
@@ -106,6 +131,15 @@ public:
 			grow();
 		}
 		_add_after_check(v);
+	}
+	
+	void displayHistogram() {
+		cout << "TRIES\t| COUNT" << endl;
+		cout << "empty\t- " << (size - used) << endl;
+        for (int i = 1; i < NUM_BINS - 1; ++i) {
+            cout << i << "\t- " << histogram[i] << endl;
+        }
+		cout << ">" << NUM_BINS - 1 << "\t-" << histogram[NUM_BINS - 1];
 	}
 	
 	friend ostream& operator << (ostream& s, const HashMapLinearProbing& map) {
@@ -125,6 +159,5 @@ int main(int argc, char *argv[]) {
 	for (int i = 1; i <= n; ++i) {
 		m.add(i);
 	}
-	cout << m;
-	//m.displayHistogram();
+	m.displayHistogram();
 }

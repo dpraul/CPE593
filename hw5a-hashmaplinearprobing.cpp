@@ -2,23 +2,25 @@
 
 using namespace std;
 
+typedef unsigned long u_long;
+
 class HashMapLinearProbing {
 private:
 	/**
 	 * Internal data
 	 **/
-	int * data;
+	u_long * data;
 	int * histogram;
-	unsigned int size;
-	unsigned int used;
+	u_long size;
+	u_long used;
 	
 	
 	/**
 	 * Hashing
 	 **/
 	
-	unsigned int hash (unsigned short value) {
-		return (unsigned int)fnv1a(value) % (unsigned int)size;
+	u_long hash (u_long value) {
+		return (u_long)fnv1a(value) % (u_long)size;
 	}
 	
 	// FNV-1a hashing from http://create.stephan-brumme.com/fnv-hash/
@@ -40,7 +42,7 @@ private:
 	}
 	
 	/// hash a 32 bit integer (four bytes)
-	long fnv1a(unsigned long fourBytes, long hash = SEED)
+	long fnv1a(u_long fourBytes, long hash = SEED)
 	{
 		const unsigned char* ptr = (const unsigned char*) &fourBytes;
 		hash = fnv1a(*ptr++, hash);
@@ -54,12 +56,12 @@ private:
 	 **/
 	
 	void grow() {
-		int * temp = data;
+		u_long * temp = data;
 		int originalSize = size;
 		
 		size *= 2;
 		used = 0;
-		data = new int[size];
+		data = new u_long[size];
 		
 		for (int i = 0; i < size; i++) {
 			data[i] = 0;
@@ -114,7 +116,7 @@ public:
 	HashMapLinearProbing(int initialSize = 4) {
 		used = 0;
 		size = initialSize * 2;
-		data = new int[size];
+		data = new u_long[size];
 		for (int i = 0; i < size; i++) {
 			data[i] = 0;
 		}
@@ -139,7 +141,7 @@ public:
         for (int i = 1; i < NUM_BINS - 1; ++i) {
             cout << i << "\t- " << histogram[i] << endl;
         }
-		cout << ">" << NUM_BINS - 1 << "\t-" << histogram[NUM_BINS - 1];
+		cout << ">" << NUM_BINS - 2 << "\t- " << histogram[NUM_BINS - 1];
 	}
 	
 	friend ostream& operator << (ostream& s, const HashMapLinearProbing& map) {
@@ -151,12 +153,12 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-	int n;
+	u_long n;
 	HashMapLinearProbing m;
 	cout << "Numbers to input: ";
 	cin >> n;
 	
-	for (int i = 1; i <= n; ++i) {
+	for (u_long i = 1; i <= n; ++i) {
 		m.add(i);
 	}
 	m.displayHistogram();

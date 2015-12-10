@@ -11,10 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hello_world.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="hw1a-primes.cpp" />
+    <ClInclude Include="boggle\Bitvec.hh" />
+    <ClInclude Include="boggle\Matrix.hh" />
+    <ClInclude Include="boggle\Trie.hh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="boggle\boggle.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="boggle\boggle.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="boggle\dictionary.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D1945645-F62D-4779-94E4-246F28A66AA2}</ProjectGuid>

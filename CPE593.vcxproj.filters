@@ -15,11 +15,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hello_world.cpp">
+    <ClInclude Include="boggle\Bitvec.hh">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boggle\Matrix.hh">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="boggle\Trie.hh">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="boggle\boggle.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hw1a-primes.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="boggle\boggle.dat">
       <Filter>Source Files</Filter>
-    </ClCompile>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="boggle\dictionary.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
